@@ -1,0 +1,29 @@
+apply plugin: 'java'
+
+apply plugin: 'application'
+
+repositories {
+    jcenter()
+}
+
+project.ext {
+    akkaVersion = '2.5.0'
+}
+
+dependencies {
+    compile 'com.google.guava:guava:20.0'
+
+    compile "com.typesafe.akka:akka-actor_2.11:$akkaVersion"
+    compile "com.typesafe.akka:akka-persistence_2.11:$akkaVersion"
+    compile "com.typesafe.akka:akka-slf4j_2.11:$akkaVersion"
+
+    compile 'org.iq80.leveldb:leveldb:0.9'
+
+    compile 'org.slf4j:slf4j-api:1.7.25'
+    compile 'org.apache.logging.log4j:log4j-slf4j-impl:2.8.2'
+
+    testCompile 'junit:junit:4.12'
+}
+
+mainClassName = 'App'
+
