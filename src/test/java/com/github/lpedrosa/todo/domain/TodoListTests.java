@@ -5,23 +5,27 @@ import java.util.Collection;
 
 import com.google.common.collect.ImmutableList;
 import org.junit.Test;
+import org.junit.Before;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class TodoListTests {
 
+    private TodoList list;
+
+    @Before
+    public void setUp() {
+        this.list = new TodoList();
+    }
+
     @Test
     public void shouldStartEmpty() {
-        TodoList list = new TodoList("test");
-
         assertTrue(list.isEmpty());
     }
 
     @Test
     public void canStoreAndRetrieveEntries() {
-        TodoList list = new TodoList("test");
-
         LocalDate date = LocalDate.now();
         String entry = "Do the laundry";
 
@@ -37,8 +41,6 @@ public class TodoListTests {
 
     @Test
     public void retrievingEntriesForEmptyDayShouldReturnNoEntries() {
-        TodoList list = new TodoList("test");
-
         LocalDate date = LocalDate.now();
 
         Collection<String> entriesForDay = list.retrieveEntries(date);
@@ -49,8 +51,6 @@ public class TodoListTests {
 
     @Test
     public void canStoreMultipleEntriesInADay() {
-        TodoList list = new TodoList("test");
-
         LocalDate date = LocalDate.now();
         Collection<String> entries = ImmutableList.of("Do the laundry", "Clean the dishes", "Slack off");
 

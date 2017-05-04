@@ -11,7 +11,7 @@ public class TodoGuardian extends AbstractActor {
 
     private final SupervisorStrategy strategy;
 
-    private static Props props(SupervisorStrategy strategy) {
+    public static Props props(SupervisorStrategy strategy) {
         return Props.create(TodoGuardian.class, () -> new TodoGuardian(strategy));
     }
 

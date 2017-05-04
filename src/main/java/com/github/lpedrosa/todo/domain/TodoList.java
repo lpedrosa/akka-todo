@@ -9,19 +9,13 @@ import com.google.common.collect.MultimapBuilder;
 
 public class TodoList {
 
-    private final String owner;
     private final ListMultimap<LocalDate, String> entries;
 
-    public TodoList(String owner) {
-        this.owner = owner;
+    public TodoList() {
         this.entries = MultimapBuilder.ListMultimapBuilder
                 .hashKeys()
                 .arrayListValues()
                 .build();
-    }
-
-    public String getOwner() {
-        return owner;
     }
 
     public void storeEntry(LocalDate date, String entry) {

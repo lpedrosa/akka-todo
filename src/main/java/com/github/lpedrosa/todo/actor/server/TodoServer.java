@@ -12,6 +12,7 @@ import com.github.lpedrosa.todo.domain.TodoList;
 
 public class TodoServer extends AbstractActor {
 
+    private final String owner;
     private final TodoList list;
 
     public static Props props(String owner) {
@@ -19,7 +20,8 @@ public class TodoServer extends AbstractActor {
     }
 
     private TodoServer(String owner) {
-        this.list = new TodoList(owner);
+        this.owner = owner;
+        this.list = new TodoList();
     }
 
     @Override
