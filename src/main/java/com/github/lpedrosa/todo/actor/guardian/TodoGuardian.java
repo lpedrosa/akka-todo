@@ -5,6 +5,7 @@ import akka.actor.ActorRef;
 import akka.actor.Props;
 import akka.actor.SupervisorStrategy;
 import com.github.lpedrosa.todo.actor.guardian.message.reply.CreateFailed;
+import com.github.lpedrosa.todo.actor.guardian.message.reply.CreateSuccess;
 import com.github.lpedrosa.todo.actor.guardian.message.request.Create;
 
 public class TodoGuardian extends AbstractActor {
@@ -45,7 +46,7 @@ public class TodoGuardian extends AbstractActor {
             return;
         }
 
-        getSender().tell(child, getSelf());
+        getSender().tell(new CreateSuccess(name, child), getSelf());
     }
 
 }

@@ -2,13 +2,13 @@ package com.github.lpedrosa.todo.actor.guardian.message.reply;
 
 public class CreateFailed {
 
-    public final Throwable reason;
+    public final Exception reason;
 
-    public CreateFailed(Throwable reason) {
+    public CreateFailed(Exception reason) {
         this.reason = reason;
     }
 
-    public Throwable getReason() {
+    public Exception getReason() {
         return reason;
     }
 
