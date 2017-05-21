@@ -36,13 +36,13 @@ public class TodoServer extends AbstractActor {
         LocalDate date = msg.getDate();
         String value = msg.getValue();
 
-        this.list.storeEntry(date, value);
+        this.list.store(date, value);
     }
 
     public void doGetEntry(GetEntry msg) {
         LocalDate date = msg.getDate();
 
-        Collection<String> tasksForDate = this.list.retrieveEntries(date);
+        Collection<String> tasksForDate = this.list.entriesFor(date);
 
         getSender().tell(new Entry(tasksForDate), getSelf());
     }
