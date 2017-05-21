@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
 
@@ -34,13 +35,13 @@ public class Todos {
         return system.actorOf(guardianProps, "todoGuardian");
     }
 
-    public CompletionStage<Optional<ActorRef>> listFor(String name) {
+    public CompletableFuture<Optional<ActorRef>> listFor(String name) {
         Props props = TodoServer.props(name);
         Create create = new Create(props, "todoList-"+name);
 
         CompletionStage<Object> reply = PatternsCS.ask(guardian, create, DEFAULT_TIMEOUT);
 
-        return reply.thenApply(msg -> handleCreateReply(msg, name));
+        return reply.thenApply(msg -> handleCreateReply(msg, name)).toCompletableFuture();
     }
 
     private static Optional<ActorRef> handleCreateReply(Object msg, String name) {

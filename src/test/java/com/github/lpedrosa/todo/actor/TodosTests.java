@@ -13,9 +13,13 @@ import org.junit.Test;
 import scala.concurrent.duration.Duration;
 
 import java.time.LocalDate;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class TodosTests {
 
@@ -34,16 +38,18 @@ public class TodosTests {
     }
 
     @Test
-    public void shouldAlwaysGetSameActorForName() throws Throwable {
-        ActorRef bob = todos.listFor("bob");
-        ActorRef sameBob = todos.listFor("bob");
+    public void shouldAlwaysGetSameActorForName() throws Exception {
+        CompletableFuture<Optional<ActorRef>> bob = todos.listFor("bob");
+        CompletableFuture<Optional<ActorRef>> sameBob = todos.listFor("bob");
 
-        assertEquals(bob, sameBob);
+        assertEquals(bob.get(), sameBob.get());
     }
 
     @Test
-    public void serverShouldWorkProperly() throws Throwable {
-        ActorRef bob = todos.listFor("bob");
+    public void serverShouldWorkProperly() throws Exception {
+        ActorRef bob = todos.listFor("bob")
+                .get()
+                .orElseThrow(AssertionError::new);
 
         final LocalDate time = LocalDate.now();
         final String task = "Do the dishes";
@@ -56,8 +62,7 @@ public class TodosTests {
         GetEntry get = new GetEntry(time);
         bob.tell(get, probe.getRef());
 
-        Entry reply = probe.expectMsgClass(Duration.apply(1, TimeUnit.SECONDS),
-                Entry.class);
+        Entry reply = probe.expectMsgClass(Duration.apply(1, TimeUnit.SECONDS), Entry.class);
 
         ImmutableCollection<String> tasks = reply.getTasks();
         assertEquals(1, tasks.size());
