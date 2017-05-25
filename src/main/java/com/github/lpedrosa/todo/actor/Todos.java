@@ -35,26 +35,30 @@ public class Todos {
         return system.actorOf(guardianProps, "todoGuardian");
     }
 
-    public CompletableFuture<Optional<ActorRef>> listFor(String name) {
+    public CompletableFuture<ActorRef> listFor(String name) {
         Props props = TodoServer.props(name);
         Create create = new Create(props, "todoList-"+name);
 
         CompletionStage<Object> reply = PatternsCS.ask(guardian, create, DEFAULT_TIMEOUT);
 
-        return reply.thenApply(msg -> handleCreateReply(msg, name)).toCompletableFuture();
+        return reply.thenCompose(msg -> handleCreateReply(msg, name)).toCompletableFuture();
     }
 
-    private static Optional<ActorRef> handleCreateReply(Object msg, String name) {
+    private static CompletableFuture<ActorRef> handleCreateReply(Object msg, String name) {
+        CompletableFuture<ActorRef> result = new CompletableFuture<>();
         if (msg instanceof CreateSuccess) {
             CreateSuccess success = (CreateSuccess) msg;
-            return Optional.of(success.getRef());
+            result.complete(success.getRef());
         } else if (msg instanceof CreateFailed) {
             CreateFailed reply = (CreateFailed) msg;
-            LOG.error("Failed to retrieve todo server for name: {}", name, reply.getReason());
-            return Optional.empty();
+            Exception failureReason = reply.getReason();
+
+            LOG.error("Failed to retrieve todo server for name: {}", name, failureReason);
+            result.completeExceptionally(failureReason);
         } else {
-            throw new IllegalStateException("received unknown reply!");
+            result.completeExceptionally(new IllegalStateException("received unknown reply!"));
         }
+        return result;
     }
 
 }

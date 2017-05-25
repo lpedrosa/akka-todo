@@ -39,17 +39,15 @@ public class TodosTests {
 
     @Test
     public void shouldAlwaysGetSameActorForName() throws Exception {
-        CompletableFuture<Optional<ActorRef>> bob = todos.listFor("bob");
-        CompletableFuture<Optional<ActorRef>> sameBob = todos.listFor("bob");
+        CompletableFuture<ActorRef> bob = todos.listFor("bob");
+        CompletableFuture<ActorRef> sameBob = todos.listFor("bob");
 
         assertEquals(bob.get(), sameBob.get());
     }
 
     @Test
     public void serverShouldWorkProperly() throws Exception {
-        ActorRef bob = todos.listFor("bob")
-                .get()
-                .orElseThrow(AssertionError::new);
+        ActorRef bob = todos.listFor("bob").get();
 
         final LocalDate time = LocalDate.now();
         final String task = "Do the dishes";
