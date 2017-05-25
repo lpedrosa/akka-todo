@@ -1,9 +1,6 @@
 package com.github.lpedrosa.todo.api;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.MediaType;
@@ -15,16 +12,19 @@ import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
+import akka.actor.Actor;
 import akka.actor.ActorRef;
 import akka.pattern.PatternsCS;
 import akka.util.Timeout;
 import com.github.lpedrosa.todo.actor.Todos;
 import com.github.lpedrosa.todo.actor.server.message.reply.Entry;
+import com.github.lpedrosa.todo.actor.server.message.request.AddEntry;
 import com.github.lpedrosa.todo.actor.server.message.request.GetEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Path("/todo")
+@Produces(MediaType.APPLICATION_JSON)
 public class TodoResource {
     private static final Logger LOG = LoggerFactory.getLogger(TodoResource.class);
     private static final Timeout DEFAULT_TIMEOUT = new Timeout(5, TimeUnit.SECONDS);
@@ -36,7 +36,6 @@ public class TodoResource {
     }
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
     public void retrieveEntries(@Suspended AsyncResponse asyncResponse,
                                 @QueryParam("owner") String owner,
                                 @QueryParam("date") String dateString) {
@@ -84,6 +83,22 @@ public class TodoResource {
         }
 
         return result;
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void retrieveEntries(@Suspended AsyncResponse asyncResponse, TodoEntry entry) {
+        CompletableFuture<ActorRef> todoList = todos.listFor(entry.getOwner());
+
+        todoList.thenAccept(todoServer -> newEntry(todoServer, entry))
+                .thenApply(ignored -> asyncResponse.resume(Response.ok().build()))
+                .exceptionally(asyncResponse::resume);
+    }
+
+    private static void newEntry(ActorRef todoServer, TodoEntry entry) {
+        AddEntry getEntry = new AddEntry(entry.getDate(), entry.getEntry());
+
+        todoServer.tell(getEntry, ActorRef.noSender());
     }
 
 }
