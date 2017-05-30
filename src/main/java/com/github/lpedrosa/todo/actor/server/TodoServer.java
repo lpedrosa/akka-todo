@@ -5,12 +5,17 @@ import java.util.Collection;
 
 import akka.actor.AbstractActor;
 import akka.actor.Props;
+import akka.event.Logging;
+import akka.event.LoggingAdapter;
+import akka.event.slf4j.Logger;
 import com.github.lpedrosa.todo.actor.server.message.reply.Entry;
 import com.github.lpedrosa.todo.actor.server.message.request.AddEntry;
 import com.github.lpedrosa.todo.actor.server.message.request.GetEntry;
 import com.github.lpedrosa.todo.domain.TodoList;
 
 public class TodoServer extends AbstractActor {
+
+    private LoggingAdapter log = Logging.getLogger(getContext().getSystem(), this);
 
     private final String owner;
     private final TodoList list;
@@ -33,6 +38,8 @@ public class TodoServer extends AbstractActor {
     }
 
     private void doAddEntry(AddEntry msg) {
+        log.info("add entry [{}] to list [{}]", msg, this.owner);
+
         LocalDate date = msg.getDate();
         String value = msg.getValue();
 
@@ -40,8 +47,9 @@ public class TodoServer extends AbstractActor {
     }
 
     private void doGetEntry(GetEntry msg) {
-        LocalDate date = msg.getDate();
+        log.info("get entry [{}] from list [{}]", msg, this.owner);
 
+        LocalDate date = msg.getDate();
         Collection<String> tasksForDate = this.list.entriesFor(date);
 
         getSender().tell(new Entry(tasksForDate), getSelf());
