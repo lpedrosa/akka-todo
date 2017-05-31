@@ -1,6 +1,8 @@
-apply plugin: 'java'
+plugins {
+    id 'us.kirchmeier.capsule' version '1.0.2'
+}
 
-apply plugin: 'application'
+apply plugin: 'java'
 
 repositories {
     jcenter()
@@ -26,5 +28,7 @@ dependencies {
     testCompile "com.typesafe.akka:akka-testkit_2.11:$akkaVersion"
 }
 
-mainClassName = 'com.github.lpedrosa.todo.TodoApplication'
-
+task fatCapsule(type: FatCapsule) {
+    description 'Build an executable jar'
+    applicationClass 'com.github.lpedrosa.todo.TodoApplication'
+}
