@@ -67,7 +67,7 @@ public class AkkaConfig {
     private static final Set<String> validLevels = ImmutableSet.of("INFO", "DEBUG", "ERROR");
 
     private static Optional<String> parseLogLevel(String logLevel) {
-        if (validLevels.contains(logLevel.toUpperCase())) {
+        if (validLevels.contains(logLevel.trim().toUpperCase())) {
             return Optional.of(logLevel);
         }
 

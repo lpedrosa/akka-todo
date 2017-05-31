@@ -5,6 +5,12 @@ server:
   adminConnectors:
     - type: http
       port: 8081
+  requestLog:
+    appenders:
+      - type: file
+        currentLogFilename: /tmp/access.log
+        archivedLogFilenamePattern: /tmp/access-%d{yyyy-MM-dd}.log.gz
+        timeZone: UTC
 
 logging:
   level: INFO
@@ -13,16 +19,17 @@ logging:
     com.github.lpedrosa.todo: DEBUG
 
   appenders:
-     - type: console
-     - type: file
-       threshold: INFO
-       logFormat: "%-6level [%d{HH:mm:ss.SSS}] [%t] [%X{akkaSource}] %logger{5} - %X{code} %msg %n"
-       currentLogFilename: /tmp/application.log
-       archivedLogFilenamePattern: /tmp/application-%d{yyyy-MM-dd}-%i.log.gz
-       archivedFileCount: 7
-       timeZone: UTC
-       maxFileSize: 10MB
+    - type: console
+      threshold: DEBUG
+      logFormat: "%-6level [%d{HH:mm:ss.SSS}] [%t] %X{akkaSource} %logger{99} - %X{code} %msg %n"
+    - type: file
+      threshold: DEBUG
+      logFormat: "%-6level [%d{HH:mm:ss.SSS}] [%t] %X{akkaSource} %logger{5} - %X{code} %msg %n"
+      currentLogFilename: /tmp/application.log
+      archivedLogFilenamePattern: /tmp/application-%d{yyyy-MM-dd}.log.gz
+      archivedFileCount: 7
+      timeZone: UTC
 
 akka:
-  systemName: "todo"
-  logLevel: "DEBUG"
+  systemName: todo
+  logLevel: DEBUG
