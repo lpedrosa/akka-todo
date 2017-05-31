@@ -12,7 +12,6 @@ import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
-import akka.actor.Actor;
 import akka.actor.ActorRef;
 import akka.pattern.PatternsCS;
 import akka.util.Timeout;
