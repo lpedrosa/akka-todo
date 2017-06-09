@@ -7,19 +7,19 @@ import java.util.Collection;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Todo {
-    private final String owner;
+    private final String title;
     private final LocalDate date;
     private final Collection<String> entries;
 
-    public Todo(String owner, LocalDate date, Collection<String> entries) {
-        this.owner = owner;
+    public Todo(String title, LocalDate date, Collection<String> entries) {
+        this.title = title;
         this.date = date;
         this.entries = entries;
     }
 
-    @JsonProperty("owner")
+    @JsonProperty("title")
     public String getOwner() {
-        return this.owner;
+        return this.title;
     }
 
     @JsonProperty("date")

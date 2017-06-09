@@ -36,7 +36,7 @@ public class TodoResource {
 
     @GET
     public void retrieveEntries(@Suspended AsyncResponse asyncResponse,
-                                @QueryParam("owner") String owner,
+                                @QueryParam("title") String title,
                                 @QueryParam("date") String dateString) {
 
         // FIXME the String to LocalDate conversion should be somewhere else
@@ -52,10 +52,10 @@ public class TodoResource {
             return;
         }
 
-        CompletableFuture<ActorRef> todoList = todos.listFor(owner);
+        CompletableFuture<ActorRef> todoList = todos.listFor(title);
 
         CompletableFuture<Todo> todo = todoList.thenCompose(todoServer -> todoEntriesForDate(todoServer, date))
-                .thenApply(entries -> new Todo(owner, date, entries));
+                .thenApply(entries -> new Todo(title, date, entries));
 
         todo.thenApply(asyncResponse::resume)
                 .exceptionally(asyncResponse::resume); // not treating the exceptions here

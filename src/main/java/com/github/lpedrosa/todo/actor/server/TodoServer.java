@@ -17,15 +17,15 @@ public class TodoServer extends AbstractActor {
 
     private LoggingAdapter log = Logging.getLogger(getContext().getSystem(), this);
 
-    private final String owner;
+    private final String title;
     private final TodoList list;
 
-    public static Props props(String owner) {
-        return Props.create(TodoServer.class, () -> new TodoServer(owner));
+    public static Props props(String title) {
+        return Props.create(TodoServer.class, () -> new TodoServer(title));
     }
 
-    private TodoServer(String owner) {
-        this.owner = owner;
+    private TodoServer(String title) {
+        this.title = title;
         this.list = new TodoList();
     }
 
@@ -38,7 +38,7 @@ public class TodoServer extends AbstractActor {
     }
 
     private void doAddEntry(AddEntry msg) {
-        log.info("add entry [{}] to list [{}]", msg, this.owner);
+        log.info("add entry [{}] to list [{}]", msg, this.title);
 
         LocalDate date = msg.getDate();
         String value = msg.getValue();
@@ -47,7 +47,7 @@ public class TodoServer extends AbstractActor {
     }
 
     private void doGetEntry(GetEntry msg) {
-        log.info("get entry [{}] from list [{}]", msg, this.owner);
+        log.info("get entry [{}] from list [{}]", msg, this.title);
 
         LocalDate date = msg.getDate();
         Collection<String> tasksForDate = this.list.entriesFor(date);

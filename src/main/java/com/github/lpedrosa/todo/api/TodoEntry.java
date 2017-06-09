@@ -9,15 +9,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class TodoEntry {
 
-    private final String owner;
+    private final String title;
     private final LocalDate date;
     private final String entry;
 
     @JsonCreator
-    private TodoEntry(@JsonProperty("owner") String owner,
+    private TodoEntry(@JsonProperty("title") String title,
                       @JsonProperty("date") String date,
                       @JsonProperty("entry") String entry) {
-        this.owner = owner;
+        this.title = title;
         this.date = parseDate(date);
         this.entry = entry;
     }
@@ -33,7 +33,7 @@ public class TodoEntry {
     }
 
     public String getOwner() {
-        return owner;
+        return title;
     }
 
     public LocalDate getDate() {

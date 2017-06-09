@@ -34,7 +34,7 @@ By default, the API runs on port `8080`. You can override this by modifying the 
 
 Retrieves todo entries from a list by date. It accepts the following query parameters:
 
-* owner - the todo list owner
+* title - the todo list title
 * date - the date in the yyyy-MM-dd format
 
 It replies with a json representation of the entries.
@@ -42,11 +42,11 @@ It replies with a json representation of the entries.
 Example:
 
 ```
-$ curl "http://localhost:8080/todo?owner=Alice&date=2016-02-01"
+$ curl "http://localhost:8080/todo?title=AliceTasks&date=2016-02-01"
 
-# entries from Alice's list for 2016-02-01
+# entries from Alice's task list for 2016-02-01
 {
-    "owner": "Alice",
+    "title": "AliceTasks",
     "date": "2016-02-01",
     "entries": []
 }
@@ -58,7 +58,7 @@ Creates an entry in a list for a date. It accept a json body with the following 
 
 ```json
 {
-  "owner": "list owner",
+  "title": "list title",
   "date": "date in yyyy-MM-dd format",
   "entry": "actual entry"
 }
@@ -69,9 +69,9 @@ Example:
 ```
 $ curl -X POST \
     -H 'Content-Type: application/json' \
-    -d '{"owner": "Alice", "date": "2016-02-01", "entry": "Fix some bugs"}' \
+    -d '{"title": "AliceTasks", "date": "2016-02-01", "entry": "Fix some bugs"}' \
     http://localhost:8080/todo
 
-$ curl "http://localhost:8080/todo?owner=Alice&date=2016-02-01"
-{"owner":"Alice","entries":["Fix some bugs","Fix some bugs"],"date":"2016-02-01"}
+$ curl "http://localhost:8080/todo?title=AliceTasks&date=2016-02-01"
+{"title":"AliceTasks","entries":["Fix some bugs","Fix some bugs"],"date":"2016-02-01"}
 ```
